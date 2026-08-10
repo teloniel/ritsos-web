@@ -3,6 +3,7 @@ const MONTHS_GR = ["Ιανουαρίου","Φεβρουαρίου","Μαρτίο
                     "Ιουλίου","Αυγούστου","Σεπτεμβρίου","Οκτωβρίου","Νοεμβρίου","Δεκεμβρίου"];
 
 let LOG_DATA = [];
+let DAILY_DAYS = [];   // λίστα ημερών { date, entries }
 
 function statusClass(statusText) {
   const s = statusText.toUpperCase();
@@ -28,25 +29,46 @@ function formatDateHeader(isoDate) {
   return `${weekday} ${d.getDate()} ${MONTHS_GR[d.getMonth()]}`;
 }
 
-function renderDaily(daily) {
+function setupDateSelect(days) {
+  const select = document.getElementById("dailyDateSelect");
+  select.innerHTML = "";
+  days.forEach((day, idx) => {
+    const opt = document.createElement("option");
+    opt.value = String(idx);
+    opt.textContent = formatDateHeader(day.date);
+    select.appendChild(opt);
+  });
+  // Προεπιλογή: η μέρα που ταιριάζει με σήμερα αν υπάρχει, αλλιώς η πρώτη
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const todayIdx = days.findIndex(d => d.date === todayIso);
+  select.value = String(todayIdx >= 0 ? todayIdx : 0);
+  select.onchange = () => renderDailyDay(days[parseInt(select.value, 10)]);
+}
+
+function renderDailyDay(day) {
   const container = document.getElementById("dailyRoster");
   const empty = document.getElementById("dailyEmpty");
   container.innerHTML = "";
 
-  if (!daily || !daily.entries || daily.entries.length === 0) {
+  if (!day || !day.entries || day.entries.length === 0) {
     empty.hidden = false;
+    document.getElementById("todayDate").textContent = day ? formatDateHeader(day.date) : "—";
     return;
   }
   empty.hidden = true;
 
-  document.getElementById("todayDate").textContent = formatDateHeader(daily.date);
+  document.getElementById("todayDate").textContent = formatDateHeader(day.date);
 
-  for (const entry of daily.entries) {
+  for (const entry of day.entries) {
     const row = document.createElement("div");
     row.className = `roster-row ${statusClass(entry.status)}`;
 
-    const regTags = (entry.reg_nos || [])
-      .map(r => `<span class="reg-tag">ΠΡΩΤ: ${escapeHtml(r)}</span>`).join(" ");
+    const regTags = (entry.reg_nos || []).map(r => {
+      const regNo = typeof r === "object" ? r.reg_no : r;
+      const content = typeof r === "object" ? r.content : "";
+      const tip = content ? `<span class="tip">${escapeHtml(content)}</span>` : "";
+      return `<span class="reg-tag" tabindex="0">ΠΡΩΤ: ${escapeHtml(regNo)}${tip}</span>`;
+    }).join(" ");
 
     row.innerHTML = `
       <div class="name">${escapeHtml(entry.name)}
@@ -57,6 +79,35 @@ function renderDaily(daily) {
     `;
     container.appendChild(row);
   }
+}
+
+function renderDaily(dailyReport) {
+  // Δέχεται είτε νέα μορφή { days: [...] } είτε παλιά μορφή { date, entries }
+  // (ώστε παλιά data.json αρχεία να μη σπάσουν τη σελίδα).
+  let days;
+  if (dailyReport && Array.isArray(dailyReport.days)) {
+    days = dailyReport.days;
+  } else if (dailyReport && dailyReport.date) {
+    days = [dailyReport];
+  } else {
+    days = [];
+  }
+
+  DAILY_DAYS = days;
+  const pickerRow = document.querySelector(".date-picker-row");
+
+  if (days.length === 0) {
+    pickerRow.hidden = true;
+    document.getElementById("dailyEmpty").hidden = false;
+    document.getElementById("dailyRoster").innerHTML = "";
+    document.getElementById("todayDate").textContent = "—";
+    return;
+  }
+
+  pickerRow.hidden = days.length <= 1;
+  setupDateSelect(days);
+  const select = document.getElementById("dailyDateSelect");
+  renderDailyDay(days[parseInt(select.value, 10)]);
 }
 
 function renderPending(list) {
