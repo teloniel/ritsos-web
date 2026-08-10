@@ -155,6 +155,68 @@ main {
   padding: 40px 20px;
 }
 
+/* ============ ΕΠΙΛΟΓΕΑΣ ΗΜΕΡΟΜΗΝΙΑΣ ============ */
+.date-picker-row {
+  margin-bottom: 14px;
+}
+
+#dailyDateSelect {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237f93a6' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+#dailyDateSelect:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
+
+/* ============ TOOLTIP (περιεχόμενο αναφοράς) ============ */
+.reg-tag {
+  position: relative;
+  cursor: help;
+}
+
+.reg-tag .tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.4;
+  white-space: normal;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: opacity 0.12s ease;
+  pointer-events: none;
+}
+
+.reg-tag:hover .tip,
+.reg-tag:focus .tip {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* ============ ROSTER (Ημερήσια) ============ */
 .roster { display: flex; flex-direction: column; gap: 6px; }
 
