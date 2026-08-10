@@ -10,7 +10,6 @@
 
 <header class="masthead">
   <div class="masthead-top">
-    <span class="hull-id">ΤΠΚ ΡΙΤΣΟΣ</span>
     <span class="sync-dot" id="syncDot" title="Κατάσταση ενημέρωσης"></span>
   </div>
   <h1 id="todayDate">—</h1>
@@ -26,6 +25,9 @@
 <main id="app">
 
   <section class="panel active" id="panel-daily">
+    <div class="date-picker-row">
+      <select id="dailyDateSelect"></select>
+    </div>
     <div class="panel-empty" id="dailyEmpty" hidden>Δεν υπάρχουν δεδομένα ημερήσιας αναφοράς.</div>
     <div class="roster" id="dailyRoster"></div>
   </section>
