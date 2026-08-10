@@ -1,0 +1,296 @@
+:root {
+  --bg:          #0a1620;
+  --bg-panel:    #0f1e2b;
+  --bg-elevated: #16293a;
+  --border:      #22384c;
+  --text:        #e7edf3;
+  --text-dim:    #7f93a6;
+  --text-faint:  #52697c;
+
+  --amber:  #d99a3a;
+  --teal:   #3f9088;
+  --red:    #c15342;
+  --green:  #55a15f;
+  --blue:   #4a7ab5;
+  --black-status: #0d1620;
+
+  --font-display: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+}
+
+/* ============ MASTHEAD ============ */
+.masthead {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-panel) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 20px 16px;
+}
+
+.masthead-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.hull-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  flex-shrink: 0;
+}
+.sync-dot.stale { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.sync-dot.error { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+.masthead h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.updated-line {
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+/* ============ TABS ============ */
+.tabs {
+  display: flex;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: max-content;
+  padding: 13px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-faint);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tab-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--amber);
+}
+
+.tab-badge {
+  display: inline-block;
+  min-width: 16px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  border-radius: 8px;
+  background: var(--amber);
+  color: #1a1206;
+  font-size: 10px;
+  font-weight: 700;
+}
+.tab-badge:empty { display: none; }
+
+/* ============ MAIN / PANELS ============ */
+main {
+  flex: 1;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.panel { display: none; animation: fadein 0.2s ease; }
+.panel.active { display: block; }
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panel-empty {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 13px;
+  padding: 40px 20px;
+}
+
+/* ============ ROSTER (Ημερήσια) ============ */
+.roster { display: flex; flex-direction: column; gap: 6px; }
+
+.roster-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--text-faint);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+
+.roster-row .name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.roster-row .name .note {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.status-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 4px 9px;
+  border-radius: var(--radius);
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--bg-elevated);
+}
+
+.reg-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px 6px;
+}
+
+/* status color coding — border-left of row + chip background */
+.roster-row.st-enplo   { border-left-color: var(--blue); }
+.roster-row.st-black   { border-left-color: #445; }
+.roster-row.st-vardia  { border-left-color: var(--green); }
+.roster-row.st-adeia   { border-left-color: var(--blue); }
+.roster-row.st-apospasi{ border-left-color: var(--amber); }
+.roster-row.st-ergou   { border-left-color: var(--teal); }
+.roster-row.st-argia   { border-left-color: var(--amber); }
+.roster-row.st-endon   { border-left-color: var(--text-faint); opacity: 0.75; }
+
+/* ============ STACK (Pending / Log cards) ============ */
+.stack { display: flex; flex-direction: column; gap: 8px; }
+
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.card-name { font-weight: 600; font-size: 14px; }
+.card-date { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); white-space: nowrap; }
+.card-type { font-size: 12px; color: var(--amber); font-weight: 600; margin-bottom: 4px; }
+.card-content { font-size: 13px; color: var(--text-dim); line-height: 1.45; }
+
+.card-meta {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  flex-wrap: wrap;
+}
+
+.status-icon { font-size: 13px; }
+.card.deleted { opacity: 0.45; }
+.card.deleted .card-name::after {
+  content: " (διαγράφηκε)";
+  font-weight: 400;
+  color: var(--red);
+  font-size: 11px;
+}
+
+/* ============ LOG CONTROLS ============ */
+.log-controls { margin-bottom: 12px; }
+
+#logSearch {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+#logSearch::placeholder { color: var(--text-faint); }
+#logSearch:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
+
+/* ============ FOOTER ============ */
+.foot {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 20px;
+}
+
+/* ============ ACCESSIBILITY ============ */
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; }
+}
+
+@media (min-width: 640px) {
+  .masthead h1 { font-size: 30px; }
+}
